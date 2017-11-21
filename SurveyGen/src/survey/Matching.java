@@ -1,23 +1,28 @@
 package survey;
 
-public class Matching extends Question{
+public class Matching extends Question implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7964985668734173630L;
 	public int choices, maxLength = 0;
-	public String corrAnswer;
+	public String corrAnswer, userAnswer;
+	public String[] corrAnswerLetter;
 	public String[] column1;
 	public String[] column2;
 	public String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
 			"M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 	
 	protected void setChoices() {
-		int numChoices;
 		int choice;
 		Display.display("Enter the number of choices for your question: ");
-		numChoices = Response.getInt(0);
-		column1 = new String[numChoices];
-		column2 = new String[numChoices];
+		choices = Response.getInt(0);
+		column1 = new String[choices];
+		column2 = new String[choices];
+		corrAnswerLetter = new String[choices];
 		
 		Display.display("Choices for column 1: ");
-		for (int i = 0; i < numChoices; i++) {
+		for (int i = 0; i < choices; i++) {
 			choice = i + 1;
 			Display.display("Please enter choice #" + choice);
 			column1[i] = Response.getString();
@@ -27,23 +32,24 @@ public class Matching extends Question{
 		}
 		
 		Display.display("Choices for column 2: ");
-		for (int i = 0; i < numChoices; i++) {
+		for (int i = 0; i < choices; i++) {
 			choice = i + 1;
 			Display.display("Please enter choice " + letters[i]);
 			column2[i] = Response.getString();
 		}
 		
 		if (test) {
-			Display.display("Please enter correct answer as string of letters with no spaces: ");
-			boolean corr = true;
-			while (corr) {
-				corrAnswer = Response.getString();
-				if (corrAnswer.length() != column1.length) {
-					Display.display("Incorrect length, please try again");
-				} else {
-					corr = false;
-				}
-			}
+			promptForChoices();
+			setCorrAnswer();
+		}
+	}
+	
+	protected void promptForChoices() {
+		int choiceNum = column1.length;
+		Display.display("Enter correct matchings when prompted" );
+		for (int i = 0; i < choiceNum; i++) {
+			Display.display((i+1) + ") ");
+			corrAnswerLetter[i] = Response.getString(1);
 		}
 	}
 	
@@ -61,5 +67,31 @@ public class Matching extends Question{
 	
 	public String getCorrAnswer() {
 		return corrAnswer;
+	}
+	
+	public void setCorrAnswer() {
+		corrAnswer = "";
+		for (int i = 0; i < corrAnswerLetter.length; i++) {
+			corrAnswer = corrAnswer + (i + 1) + ") " + corrAnswerLetter[i] + "\n";
+		}
+	}
+	
+	public void setUserAnswer() {
+		userAnswer = "";
+		for (int i = 0; i < corrAnswerLetter.length; i++) {
+			corrAnswer = corrAnswer + (i + 1) + ") " + corrAnswerLetter[i] + "\n";
+		}
+	}
+	
+	public void take() {
+		Display.display(getPrompt());
+		displayChoices();
+		promptForChoices();
+		setUserAnswer();
+	}
+	
+	@Override
+	protected void setLimit(int i) {
+		// TODO Auto-generated method stub
 	}
 }

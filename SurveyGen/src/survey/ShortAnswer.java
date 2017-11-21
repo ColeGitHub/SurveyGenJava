@@ -1,9 +1,12 @@
 package survey;
 
-public class ShortAnswer extends Essay{
+public class ShortAnswer extends Essay implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2083384745310505416L;
 	private int limit;
 	public boolean test;
-	private String corrAnswer;
 	
 	ShortAnswer() {
 		
@@ -11,6 +14,11 @@ public class ShortAnswer extends Essay{
 	
 	ShortAnswer(int limit) {
 		this.limit = limit;
+	}
+	
+	public void take() {
+		Display.display(getPrompt());
+		userAnswer = Response.getString(getLimit());
 	}
 	
 	public int getLimit() {
@@ -22,7 +30,7 @@ public class ShortAnswer extends Essay{
 	}
 	
 	public void setCorrAnswer(String str) {
-		this.corrAnswer = str;
+		corrAnswer = str;
 	}
 	
 	public String getCorrAnswer() {

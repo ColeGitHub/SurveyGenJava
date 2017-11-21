@@ -3,7 +3,7 @@ package survey;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Response {
+public class Response implements java.io.Serializable{
 	
 	public static int getInt(int lower) {
 		int rtn = 0;
@@ -51,7 +51,25 @@ public class Response {
 		return rtn;
 	}
 	
-	public static String getString(boolean limit, int limitNum) {
+	public static boolean getYesNo() {
+		boolean yn = true;
+		String yesNo;
+		while (yn) {
+			yesNo = Response.getString().toUpperCase();
+			if (yesNo.equals("Y")) { 
+				yn = false;
+			} else if (yesNo.equals("N")) { 
+				yn = false;
+			} else {
+				Display.display("Please enter 'Y' for yes or 'N' for no");
+			}
+		}
+		
+		return yn;
+	}
+	
+	public static String getString(int limitNum) {
+		boolean limit = true;
 		String rtn = "";
 		Scanner scan = new Scanner(System.in);
 		
@@ -59,12 +77,10 @@ public class Response {
 			rtn = scan.nextLine();
 			if (rtn.length() > limitNum) {
 				Display.display("Please enter answer up to " + limitNum + " characters");
-				scan.nextLine();
 			} else {
 				limit = false;
 			}
 		}
-		scan.nextLine();
 		
 		return rtn;
 	}

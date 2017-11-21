@@ -2,15 +2,39 @@ package survey;
 
 import java.util.ArrayList;
 
-public class Test extends Survey{
-	ArrayList<Question> questions = new ArrayList<Question>();
+public class Test extends Survey implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6024950810548753834L;
+	ArrayList<Question> questions = null;
+	double earnedPoints;
+	double grade;
 	
 	Test() {
+		questions = new ArrayList<Question>();
+	}
 	
+	public void grade() {
+		double points = 100/questions.size();
+		earnedPoints = 0;
+		String output;
+		Question q;
+		for (int i = 0; i < questions.size(); i++) {
+			q = questions.get(i);
+			if (!(q instanceof Essay)) {
+				if (q.getCorrAnswer().equals(q.getUserAnswer())) {
+					earnedPoints += points;
+				}
+			}
+		}
+		grade = earnedPoints;
+		output = Double.toString(earnedPoints) + "/100";
+		Display.display(output);
 	}
 	
 	protected void addMultChoice() {
-		MultChoice q = new MultChoice();
+		Question q = new MultChoice();
 		q.setTest(true);
 		setP(q);
 		q.setChoices();
@@ -18,9 +42,10 @@ public class Test extends Survey{
 	}
 	
 	protected void addTrueFalse() {
-		TrueFalse q = new TrueFalse();
+		Question q = new TrueFalse();
 		q.setTest(true);
 		setP(q);
+		q.setChoices();
 		questions.add(q);
 	}
 	
@@ -30,7 +55,7 @@ public class Test extends Survey{
 		Display.display("Please enter character limit of answer");
 		q.setLimit(Response.getInt(0));
 		Display.display("Please enter correct answer");
-		q.setCorrAnswer(Response.getString(true, q.getLimit()));
+		q.setCorrAnswer(Response.getString(q.getLimit()));
 		questions.add(q);
 	}
 	
@@ -43,8 +68,8 @@ public class Test extends Survey{
 	protected void addRanking() {
 		Ranking q = new Ranking();
 		setP(q);
-		Display.display("Please enter correct answer");
-		q.setCorrAnswer(Response.getString(true, q.column1.length));
+		q.setTest(true);
+		q.setChoices();
 		questions.add(q);
 	}
 	
